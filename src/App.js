@@ -594,17 +594,21 @@ export default function ImageProcessingWebApp() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <div className="border p-2">
+      <div style={{display: 'flex', gap: 12, alignItems: 'flex-start'}}>
+        <div style={{flex: '1 1 auto'}}>
+          <div className="border p-2" style={{boxSizing: 'border-box'}}>
             <div className="text-sm font-medium mb-1">Original</div>
-            <canvas ref={originalCanvasRef} className="border" style={{width: width + 'px', height: height + 'px'}}></canvas>
+            <canvas ref={originalCanvasRef} className="border" style={{display: 'block', boxSizing: 'border-box', width: width + 'px', height: height + 'px'}}></canvas>
           </div>
         </div>
-        <div>
-          <div className="border p-2">
+
+        {/* visual divider */}
+        <div style={{width: 2, background: '#e5e7eb', borderRadius: 2}} aria-hidden="true"></div>
+
+        <div style={{flex: '1 1 auto'}}>
+          <div className="border p-2" style={{boxSizing: 'border-box'}}>
             <div className="text-sm font-medium mb-1">Processed</div>
-            <canvas ref={processedCanvasRef} className="border" style={{width: width + 'px', height: height + 'px'}}></canvas>
+            <canvas ref={processedCanvasRef} className="border" style={{display: 'block', boxSizing: 'border-box', width: width + 'px', height: height + 'px'}}></canvas>
           </div>
         </div>
       </div>
