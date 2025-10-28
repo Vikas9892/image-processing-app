@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Image Processing Web App
 // Single-file React component. Uses canvas for image display + pixel-level processing.
@@ -41,6 +42,19 @@ export default function ImageProcessingWebApp() {
     if (!c) return null;
     return c.getContext("2d");
   }
+
+  // Small animated button wrapper to keep hover/tap consistent
+  const MotionBtn = ({ children, className = 'btn', ...props }) => (
+    <motion.button
+      whileHover={{ scale: 1.03, y: -2 }}
+      whileTap={{ scale: 0.97 }}
+      transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+      className={className}
+      {...props}
+    >
+      {children}
+    </motion.button>
+  );
 
   // drawing is handled from the `sourceBitmap` useEffect below
 
@@ -587,10 +601,10 @@ export default function ImageProcessingWebApp() {
           <div className="text-xs text-gray-500">(optional) target image for histogram matching</div>
         </div>
         <div>
-          <button className="px-3 py-1 bg-blue-600 text-white rounded" onClick={() => { resetToOriginal(); }}>Reset</button>
+          <MotionBtn className="px-3 py-1 bg-blue-600 text-white rounded" onClick={resetToOriginal}>Reset</MotionBtn>
         </div>
         <div>
-          <button className="px-3 py-1 bg-green-600 text-white rounded" onClick={downloadProcessed}>Download</button>
+          <MotionBtn className="px-3 py-1 bg-green-600 text-white rounded" onClick={downloadProcessed}>Download</MotionBtn>
         </div>
       </div>
 
@@ -616,34 +630,34 @@ export default function ImageProcessingWebApp() {
       <div className="mt-4 grid grid-cols-3 gap-4">
         <div className="p-2 border rounded">
           <h3 className="font-semibold mb-2">Intensity transforms</h3>
-          <div className="flex flex-col gap-2">
-            <button className="btn" onClick={negative}>Negative</button>
+            <div className="flex flex-col gap-2">
+            <MotionBtn onClick={negative}>Negative</MotionBtn>
             <div>
               <label className="text-xs">Log c: {logC}</label>
               <input type="range" min="0.1" max="5" step="0.1" value={logC} onChange={(e) => setLogC(parseFloat(e.target.value))} />
-              <button className="btn" onClick={() => logTransform(logC)}>Apply Log</button>
+              <MotionBtn onClick={() => logTransform(logC)}>Apply Log</MotionBtn>
             </div>
             <div>
               <label className="text-xs">Gamma: {gamma}</label>
               <input type="range" min="0.1" max="3" step="0.1" value={gamma} onChange={(e) => setGamma(parseFloat(e.target.value))} />
-              <button className="btn" onClick={() => gammaTransform(gamma)}>Apply Gamma</button>
+              <MotionBtn onClick={() => gammaTransform(gamma)}>Apply Gamma</MotionBtn>
             </div>
             <div>
               <label className="text-xs">Stretch low:{stretchLow} high:{stretchHigh}</label>
               <input type="range" min="0" max="255" value={stretchLow} onChange={(e) => setStretchLow(parseInt(e.target.value))} />
               <input type="range" min="0" max="255" value={stretchHigh} onChange={(e) => setStretchHigh(parseInt(e.target.value))} />
-              <button className="btn" onClick={() => contrastStretch(stretchLow, stretchHigh)}>Contrast Stretch</button>
+              <MotionBtn onClick={() => contrastStretch(stretchLow, stretchHigh)}>Contrast Stretch</MotionBtn>
             </div>
             <div>
               <label className="text-xs">Slice min:{sliceMin} max:{sliceMax}</label>
               <input type="range" min="0" max="255" value={sliceMin} onChange={(e) => setSliceMin(parseInt(e.target.value))} />
               <input type="range" min="0" max="255" value={sliceMax} onChange={(e) => setSliceMax(parseInt(e.target.value))} />
-              <button className="btn" onClick={() => levelSlicing(sliceMin, sliceMax)}>Level Slicing</button>
+              <MotionBtn onClick={() => levelSlicing(sliceMin, sliceMax)}>Level Slicing</MotionBtn>
             </div>
             <div>
               <label className="text-xs">Bit plane: {bitPlane}</label>
               <input type="range" min="0" max="7" value={bitPlane} onChange={(e) => setBitPlane(parseInt(e.target.value))} />
-              <button className="btn" onClick={() => bitPlaneSlice(bitPlane)}>Bit-plane Slice</button>
+              <MotionBtn onClick={() => bitPlaneSlice(bitPlane)}>Bit-plane Slice</MotionBtn>
             </div>
           </div>
         </div>
@@ -651,8 +665,8 @@ export default function ImageProcessingWebApp() {
         <div className="p-2 border rounded">
           <h3 className="font-semibold mb-2">Histogram</h3>
           <div className="flex flex-col gap-2">
-            <button className="btn" onClick={histogramEqualization}>Equalize Histogram</button>
-            <button className="btn" onClick={histogramMatchingToTarget}>Match to Target (upload target)</button>
+            <MotionBtn onClick={histogramEqualization}>Equalize Histogram</MotionBtn>
+            <MotionBtn onClick={histogramMatchingToTarget}>Match to Target (upload target)</MotionBtn>
           </div>
         </div>
 
@@ -662,25 +676,25 @@ export default function ImageProcessingWebApp() {
             <div>
               <label className="text-xs">Gaussian sigma: {gaussSigma}</label>
               <input type="range" min="0.5" max="5" step="0.1" value={gaussSigma} onChange={(e) => setGaussSigma(parseFloat(e.target.value))} />
-              <button className="btn" onClick={() => lowPassGaussian(gaussSigma)}>Gaussian (Low-pass)</button>
+              <MotionBtn onClick={() => lowPassGaussian(gaussSigma)}>Gaussian (Low-pass)</MotionBtn>
             </div>
             <div>
               <label className="text-xs">Sharpen amount: {sharpenAmount}</label>
               <input type="range" min="0.5" max="3" step="0.1" value={sharpenAmount} onChange={(e) => setSharpenAmount(parseFloat(e.target.value))} />
-              <button className="btn" onClick={() => highPassSharpen(sharpenAmount)}>High-pass Sharpen</button>
+              <MotionBtn onClick={() => highPassSharpen(sharpenAmount)}>High-pass Sharpen</MotionBtn>
             </div>
             <div>
               <label className="text-xs">Unsharp amount: {unsharpAmount}</label>
               <input type="range" min="0.1" max="3" step="0.1" value={unsharpAmount} onChange={(e) => setUnsharpAmount(parseFloat(e.target.value))} />
-              <button className="btn" onClick={() => unsharpMask(unsharpAmount, gaussSigma)}>Unsharp Mask</button>
+              <MotionBtn onClick={() => unsharpMask(unsharpAmount, gaussSigma)}>Unsharp Mask</MotionBtn>
             </div>
             <div>
               <label className="text-xs">DoG low:{dogLow} high:{dogHigh}</label>
               <input type="range" min="0.5" max="4" step="0.1" value={dogLow} onChange={(e) => setDogLow(parseFloat(e.target.value))} />
               <input type="range" min="0.5" max="6" step="0.1" value={dogHigh} onChange={(e) => setDogHigh(parseFloat(e.target.value))} />
-              <button className="btn" onClick={() => dogBandpass(dogLow, dogHigh)}>Band-pass (DoG)</button>
+              <MotionBtn onClick={() => dogBandpass(dogLow, dogHigh)}>Band-pass (DoG)</MotionBtn>
             </div>
-            <button className="btn" onClick={enhancePipeline}>Combined enhancement pipeline</button>
+            <MotionBtn onClick={enhancePipeline}>Combined enhancement pipeline</MotionBtn>
           </div>
         </div>
       </div>
