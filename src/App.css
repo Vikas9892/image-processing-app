@@ -1,38 +1,54 @@
-.App {
-  text-align: center;
+/* Application styles for Image Processing Playground */
+:root{
+  --bg: #0f172a;
+  --card: #ffffff;
+  --muted: #6b7280;
+  --accent: #2563eb;
+  --accent-2: #10b981;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body, .font-sans {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* Page layout */
+.p-4 { padding: 1rem; }
+.max-w-6xl { max-width: 80rem; margin-left: auto; margin-right: auto; }
+
+.canvas-row{ display:flex; gap:16px; align-items:flex-start; margin-top:8px; }
+.canvas-col{ flex:1 1 auto; }
+.divider{ width:2px; background:#e6eef8; border-radius:3px; }
+.canvas-card{ background: #ffffff; border-radius:8px; padding:12px; box-shadow: 0 6px 18px rgba(15,23,42,0.06); border:1px solid #e6eef8; }
+.canvas-card .text-sm{ color: #0f172a; }
+
+.canvas-display{ display:block; width:100%; height:auto; border-radius:6px; border:1px solid #e5e7eb; box-shadow: 0 2px 6px rgba(2,6,23,0.04); background: #fff; }
+
+/* Buttons */
+.btn{ display:inline-block; padding:8px 12px; background:var(--bg); color:white; border-radius:8px; font-size:13px; border:none; cursor:pointer; }
+.btn:hover{ filter:brightness(1.06); }
+
+/* Primary/Accent variants */
+.btn.primary{ background: var(--accent); }
+.btn.positive{ background: var(--accent-2); }
+
+/* Control cards */
+.p-2{ padding:0.5rem; }
+.border{ border: 1px solid #e6eef8; }
+.rounded{ border-radius:8px; }
+
+/* Inputs */
+input[type="range"]{ width:100%; margin-top:6px; margin-bottom:6px; }
+input[type="file"]{ cursor:pointer; }
+
+/* Status */
+.text-sm{ font-size:0.875rem; }
+.text-xs{ font-size:0.75rem; }
+.text-gray-600{ color: var(--muted); }
+.text-gray-700{ color: #374151; }
+
+/* Responsive tweaks */
+@media (max-width: 900px){
+  .canvas-row{ flex-direction:column; }
+  .divider{ display:none; }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}

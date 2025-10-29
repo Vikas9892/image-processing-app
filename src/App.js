@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
+import './App.css';
 
 // Image Processing Web App
 // Single-file React component. Uses canvas for image display + pixel-level processing.
@@ -608,23 +609,32 @@ export default function ImageProcessingWebApp() {
         </div>
       </div>
 
-      <div style={{display: 'flex', gap: 12, alignItems: 'flex-start'}}>
-        <div style={{flex: '1 1 auto'}}>
-          <div className="border p-2" style={{boxSizing: 'border-box'}}>
+      <div className="canvas-row">
+        <motion.div className="canvas-col" style={{flex: '1 1 auto'}}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          whileHover={{ scale: 1.01 }}
+          transition={{ duration: 0.35 }}
+        >
+          <div className="canvas-card" style={{boxSizing: 'border-box'}}>
             <div className="text-sm font-medium mb-1">Original</div>
-            <canvas ref={originalCanvasRef} className="border" style={{display: 'block', boxSizing: 'border-box', width: width + 'px', height: height + 'px'}}></canvas>
+            <canvas ref={originalCanvasRef} className="canvas-display" style={{width: width + 'px', height: height + 'px'}}></canvas>
           </div>
-        </div>
+        </motion.div>
 
-        {/* visual divider */}
-        <div style={{width: 2, background: '#e5e7eb', borderRadius: 2}} aria-hidden="true"></div>
+        <div className="divider" aria-hidden="true"></div>
 
-        <div style={{flex: '1 1 auto'}}>
-          <div className="border p-2" style={{boxSizing: 'border-box'}}>
+        <motion.div className="canvas-col" style={{flex: '1 1 auto'}}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          whileHover={{ scale: 1.01 }}
+          transition={{ duration: 0.35, delay: 0.05 }}
+        >
+          <div className="canvas-card" style={{boxSizing: 'border-box'}}>
             <div className="text-sm font-medium mb-1">Processed</div>
-            <canvas ref={processedCanvasRef} className="border" style={{display: 'block', boxSizing: 'border-box', width: width + 'px', height: height + 'px'}}></canvas>
+            <canvas ref={processedCanvasRef} className="canvas-display" style={{width: width + 'px', height: height + 'px'}}></canvas>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       <div className="mt-4 grid grid-cols-3 gap-4">
@@ -703,10 +713,7 @@ export default function ImageProcessingWebApp() {
         <strong>Status:</strong> {status}
       </div>
 
-      <style>{`
-        .btn{ display:inline-block;padding:6px 10px;background:#111827;color:white;border-radius:6px;font-size:13px }
-        input[type=range]{width:100%}
-      `}</style>
+      {/* styles moved to src/App.css */}
 
     </div>
   );
