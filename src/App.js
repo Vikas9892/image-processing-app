@@ -30,6 +30,7 @@ export default function ImageProcessingWebApp() {
   const [stretchHigh, setStretchHigh] = useState(255);
   const [sliceMin, setSliceMin] = useState(100);
   const [sliceMax, setSliceMax] = useState(200);
+  const [slicePlateau, setSlicePlateau] = useState(255);
   const [bitPlane, setBitPlane] = useState(7);
   const [gaussSigma, setGaussSigma] = useState(1.4);
   const [sharpenAmount, setSharpenAmount] = useState(1.0);
@@ -235,9 +236,29 @@ export default function ImageProcessingWebApp() {
     setStatus("Applying intensity level slicing...");
     const src = getImageData(originalCanvasRef);
     if (!src) { setStatus('No image data available. Load an image first.'); return; }
+    // Implement linear-preserving level slicing using provided mathematical formula
+    // L = 256 (8-bit), plateau value = slicePlateau (L_high)
+    const L = 256;
+    const Lminus1 = L - 1; // 255
+    const A = Math.max(0, Math.min(255, min));
+    const B = Math.max(0, Math.min(255, max));
+    const L_high = Math.max(0, Math.min(255, slicePlateau));
+
     const out = applyPerPixel(src, (r, g, b, a) => {
-      const to = (v) => (v >= min && v <= max ? 255 : 0);
-      return [to(r), to(g), to(b), a];
+      const map = (v) => {
+        // case r < A: T1(r) = (L_high / A) * r  (if A == 0, keep value as-is)
+        if (v < A) {
+          if (A === 0) return clamp(v);
+          return clamp(Math.round((L_high / A) * v));
+        }
+        // case A <= r <= B: s = L_high
+        if (v <= B) return clamp(L_high);
+        // case r > B: T2(r) = ((L-1 - L_high)/(L-1 - B))*(r - B) + L_high
+        if (B === Lminus1) return clamp(L_high);
+        const scale = (Lminus1 - L_high) / (Lminus1 - B);
+        return clamp(Math.round(scale * (v - B) + L_high));
+      };
+      return [map(r), map(g), map(b), a];
     });
     putImageData(processedCanvasRef, out);
     setStatus("Level slicing applied.");
@@ -662,6 +683,10 @@ export default function ImageProcessingWebApp() {
               <label className="text-xs">Slice min:{sliceMin} max:{sliceMax}</label>
               <input type="range" min="0" max="255" value={sliceMin} onChange={(e) => setSliceMin(parseInt(e.target.value))} />
               <input type="range" min="0" max="255" value={sliceMax} onChange={(e) => setSliceMax(parseInt(e.target.value))} />
+              <div style={{marginTop:6}}>
+                <label className="text-xs">Plateau (L_high): {slicePlateau}</label>
+                <input type="range" min="0" max="255" value={slicePlateau} onChange={(e) => setSlicePlateau(parseInt(e.target.value))} />
+              </div>
               <MotionBtn onClick={() => levelSlicing(sliceMin, sliceMax)}>Level Slicing</MotionBtn>
             </div>
             <div>
